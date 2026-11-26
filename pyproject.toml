@@ -7,3 +7,6 @@ dependencies = [
     "psycopg[binary]>=3.3,<4",
     "sqlalchemy[asyncio]>=2.1,<2.2",
 ]
+
+[tool.ruff.lint.isort]
+known-first-party = ["first_steps", "tracker"]

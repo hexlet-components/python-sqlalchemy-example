@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from tracker.db import engine
 
 from first_steps.models import Base, Task
+from tracker.db import engine
 
 
 def close_task(task_id: int) -> bool:

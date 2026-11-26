@@ -1,6 +1,7 @@
 from logging.config import fileConfig
 
 from alembic import context
+
 from tracker.db import engine
 from tracker.models import Base
 
