@@ -1,8 +1,5 @@
 name: CI
 
-# Тесты стека через задачи mise. В самом шаблоне test заглушка, поэтому здесь
-# job пропускается, а в репозитории из шаблона он красный до первой настройки
-# (AGENTS.md). Линтеры стека идут шагами hk и запускаются в check.yml.
 on:
   push:
     branches:
@@ -20,11 +17,18 @@ permissions: {}
 
 jobs:
   build:
-    if: github.repository != 'hexlet-components/component-template'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
+    services:
+      postgres:
+        image: postgres:18@sha256:c699303802144847d238196173655dbbecf7a96aeca1565f2b02eb671a1f0b6b
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432/tcp
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 3s --health-retries 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -34,3 +38,5 @@ jobs:
 
       - run: mise run setup
       - run: mise run test
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://postgres@localhost:${{ job.services.postgres.ports['5432'] }}/postgres
